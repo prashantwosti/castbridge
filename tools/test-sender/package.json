@@ -1,0 +1,21 @@
+{
+  "name": "test-sender",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "jmuxer": "^2.1.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^22.15.0",
+    "qrcode-generator": "^1.4.4"
+  }
+}

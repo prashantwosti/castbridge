@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Launcher icon foreground: the TV app icon's artwork (tizen/icon.svg), scaled into the
+     adaptive-icon safe zone (central 66dp of 108dp). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <group android:scaleX="0.17" android:scaleY="0.17"
+        android:translateX="10.48" android:translateY="20.34">
+        <!-- TV -->
+        <path android:fillColor="#24FFFFFF" android:strokeColor="#FFFFFFFF" android:strokeWidth="14"
+            android:pathData="M114,78H398A18,18 0,0 1,416 96V260A18,18 0,0 1,398 278H114A18,18 0,0 1,96 260V96A18,18 0,0 1,114 78Z" />
+        <path android:strokeColor="#FFFFFFFF" android:strokeWidth="14" android:strokeLineCap="round"
+            android:pathData="M206,318H306M256,278V318" />
+        <!-- Phone -->
+        <path android:fillColor="#FFFFFFFF"
+            android:pathData="M144,150H182A10,10 0,0 1,192 160V240A10,10 0,0 1,182 250H144A10,10 0,0 1,134 240V160A10,10 0,0 1,144 150Z" />
+        <path android:fillColor="#FF3D7BFF"
+            android:pathData="M146,162H180A4,4 0,0 1,184 166V230A4,4 0,0 1,180 234H146A4,4 0,0 1,142 230V166A4,4 0,0 1,146 162Z" />
+        <!-- Cast waves -->
+        <path android:strokeColor="#FFFFFFFF" android:strokeWidth="12" android:strokeLineCap="round"
+            android:pathData="M218,178A44,44 0,0 1,262 222M218,142A80,80 0,0 1,298 222M218,106A116,116 0,0 1,334 222" />
+    </group>
+</vector>

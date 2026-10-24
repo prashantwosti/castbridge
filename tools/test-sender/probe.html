@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>CastBridge probe</title>
+<style>body{background:#111;color:#eee;font:28px sans-serif;padding:40px}</style></head>
+<body>
+<h1>CastBridge network probe</h1>
+<pre id="out"></pre>
+<script>
+// Loaded from the Mac (which the TV can reach); tests whether the TV can reach the phone.
+// Usage: http://<this-computer>:8080/probe?target=<phone-ip>:8080
+var target = (location.search.match(/target=([^&]+)/) || [])[1];
+if (!target) {
+  document.getElementById('out').textContent = 'Add ?target=<phone-ip>:8080 to the URL.';
+  throw new Error('no target');
+}
+var out = document.getElementById('out');
+function report(line) {
+  out.textContent += line + '\n';
+  var x = new XMLHttpRequest();
+  x.open('POST', '/report');
+  x.send(line);
+}
+report('ua: ' + navigator.userAgent);
+report('target: ' + target);
+
+var img = new Image();
+var t0 = Date.now();
+img.onload = function () { report('http img: loaded?! ' + (Date.now() - t0) + 'ms'); };
+img.onerror = function () { report('http img: error after ' + (Date.now() - t0) + 'ms (fast error = reachable, ~timeout = unreachable)'); };
+img.src = 'http://' + target + '/index.html?probe=' + Date.now();
+
+var x = new XMLHttpRequest();
+var t1 = Date.now();
+x.open('GET', 'http://' + target + '/index.html');
+x.onload = function () { report('xhr: status ' + x.status + ' len ' + x.responseText.length); };
+x.onerror = function () { report('xhr: error after ' + (Date.now() - t1) + 'ms'); };
+x.send();
+
+var t2 = Date.now();
+try {
+  var ws = new WebSocket('ws://' + target + '/stream');
+  ws.onopen = function () { report('ws: OPEN after ' + (Date.now() - t2) + 'ms'); ws.close(); };
+  ws.onerror = function () { report('ws: error after ' + (Date.now() - t2) + 'ms'); };
+} catch (e) { report('ws: threw ' + e); }
+</script>
+</body>
+</html>

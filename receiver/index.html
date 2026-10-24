@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CastBridge</title>
+  <style>
+    /* Tizen 6 runs Chromium 76: no `inset`, no `gap` for flexbox. */
+    html, body {
+      margin: 0; padding: 0; width: 100%; height: 100%;
+      background: #000; overflow: hidden;
+      font-family: "SamsungOne", "Helvetica Neue", Arial, sans-serif;
+    }
+    video {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: contain; background: #000;
+    }
+    #status {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: #f2f3f7; text-align: center; transition: opacity .4s;
+      background: radial-gradient(ellipse at 50% 38%, #1d2350 0%, #0b0d1c 60%, #05060c 100%);
+    }
+    #status.hidden { opacity: 0; pointer-events: none; }
+    #status .logo { width: 220px; height: 182px; margin-bottom: 36px; }
+    #status .logo .wave { animation: pulse 1.8s ease-in-out infinite; }
+    #status .logo .wave2 { animation-delay: .25s; }
+    #status .logo .wave3 { animation-delay: .5s; }
+    @keyframes pulse { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+    #status h1 { font-size: 72px; font-weight: 300; margin: 0 0 20px; letter-spacing: 1px; }
+    #status p { font-size: 34px; color: #b7bad0; margin: 0; }
+    #status .hint {
+      display: flex; align-items: center; margin-top: 56px;
+      font-size: 26px; color: #7f84a8;
+    }
+    #status .hint svg { width: 34px; height: 34px; margin-right: 14px; }
+    #getapp {
+      position: absolute; left: 48px; bottom: 36px;
+      display: flex; align-items: center; text-align: left;
+    }
+    #getapp .qr {
+      width: 168px; height: 168px; padding: 12px; margin-right: 24px;
+      background: #fff; border-radius: 16px;
+    }
+    #getapp .qr svg { display: block; width: 100%; height: 100%; }
+    #getapp strong { display: block; font-size: 28px; font-weight: 500; color: #f2f3f7; margin-bottom: 8px; }
+    #getapp span { display: block; font-size: 22px; color: #7f84a8; line-height: 1.4; }
+    #credit {
+      position: absolute; right: 48px; bottom: 36px;
+      font-size: 22px; color: #6d7196; letter-spacing: .5px;
+    }
+    .overlay {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0, 0, 0, .6);
+    }
+    .overlay.hidden { display: none; }
+    .overlay .box {
+      min-width: 720px; padding: 56px 64px; border-radius: 24px; text-align: center;
+      background: #1b1f3b; color: #f2f3f7; box-shadow: 0 24px 80px rgba(0, 0, 0, .6);
+    }
+    .overlay h2 { font-size: 44px; font-weight: 400; margin: 0 0 16px; }
+    .overlay p { font-size: 28px; color: #b7bad0; margin: 0; }
+    .overlay .buttons { margin-top: 48px; }
+    .overlay button {
+      min-width: 220px; margin: 0 16px; padding: 18px 36px; border-radius: 14px;
+      border: 3px solid #3d4270; background: #262b52; color: #f2f3f7; font-size: 30px;
+      font-family: inherit;
+    }
+    .overlay button.focused { background: #3D7BFF; border-color: #fff; }
+    #stats {
+      position: absolute; top: 16px; right: 24px; font-size: 20px;
+      color: #7f7; font-family: monospace; display: none;
+    }
+  </style>
+</head>
+<body>
+  <video id="video" autoplay muted playsinline></video>
+  <div id="status">
+    <svg class="logo" viewBox="0 0 512 423" aria-hidden="true">
+      <rect x="96" y="78" width="320" height="200" rx="18" fill="#3D7BFF" stroke="#fff" stroke-width="14"/>
+      <path d="M206 318h100M256 278v40" stroke="#fff" stroke-width="14" stroke-linecap="round"/>
+      <rect x="134" y="150" width="58" height="100" rx="10" fill="#fff"/>
+      <rect x="142" y="162" width="42" height="72" rx="4" fill="#3D7BFF"/>
+      <g fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round">
+        <path class="wave" d="M218 178a44 44 0 0 1 44 44"/>
+        <path class="wave wave2" d="M218 142a80 80 0 0 1 80 80"/>
+        <path class="wave wave3" d="M218 106a116 116 0 0 1 116 116"/>
+      </g>
+    </svg>
+    <h1>CastBridge</h1>
+    <p id="message">Connecting to phone…</p>
+    <div class="hint">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="6" y="2" width="12" height="20" rx="2.5" fill="none" stroke="#7f84a8" stroke-width="1.8"/>
+        <circle cx="12" cy="18.5" r="1.1" fill="#7f84a8"/>
+      </svg>
+      On your phone, open CastBridge and tap Start casting
+    </div>
+    <div id="getapp">
+      <div class="qr" id="qr"></div>
+      <div>
+        <strong>Get the phone app</strong>
+        <span>Scan with your Android<br>phone's camera</span>
+      </div>
+    </div>
+    <div id="credit">Prashant Wosti  ·  CastBridge<span id="version"></span></div>
+  </div>
+  <div id="exit-dialog" class="overlay hidden" role="dialog" aria-labelledby="exit-title">
+    <div class="box">
+      <h2 id="exit-title">Exit CastBridge?</h2>
+      <div class="buttons">
+        <button id="exit-yes">Exit</button><button id="exit-no">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <div id="network-popup" class="overlay hidden" role="alert">
+    <div class="box">
+      <h2>No network connection</h2>
+      <p>Check your TV's Wi-Fi or network cable.<br>CastBridge reconnects automatically.</p>
+    </div>
+  </div>
+  <div id="stats"></div>
+  <!-- Samsung TV APIs (screensaver, network state); absent outside the TV app. -->
+  <script src="$WEBAPIS/webapis/webapis.js"></script>
+  <script src="jmuxer.min.js"></script>
+  <script src="qrcode.js"></script>
+  <script src="receiver.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+# Signing material: never commit (author/distributor certificates, passwords)
+*.p12
+*.pfx
+*.keystore
+*.jks
+samsung_cert.txt
+
+# Android
+android/.gradle/
+android/.kotlin/
+android/build/
+android/app/build/
+android/local.properties
+android/keystore.properties
+android/.idea/
+*.iml
+
+# Tizen
+tizen/build/
+
+# Desktop test tools
+tools/test-sender/node_modules/
+tools/test-sender/.tv-token
+
+# macOS
+.DS_Store
+
+# Store packages
+dist/
+
+# Store submission notes and the App UI Description (kept locally, not published)
+store/SUBMIT.md
+store/PARTNERSHIP.md
+store/ui-description.pdf
+store/src/ui-description.html
+
+# Developer guide (kept locally, not published)
+docs/DEVELOPER.md
