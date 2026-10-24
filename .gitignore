@@ -34,5 +34,6 @@ store/PARTNERSHIP.md
 store/ui-description.pdf
 store/src/ui-description.html
 
-# Developer guide (kept locally, not published)
+# Developer guide and agent handover (kept locally, not published)
 docs/DEVELOPER.md
+docs/HANDOVER.md
